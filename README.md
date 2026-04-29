@@ -12,7 +12,7 @@ This project implements a small cloud-style data processing environment that int
   - Enforces bearer-token authorization on protected endpoints.
   - Reads and processes data across both databases.
 - **Security Controls**:
-  - Password hashing (bcrypt via Passlib).
+  - Password hashing (PBKDF2-SHA256 via Passlib).
   - JWT-based authentication and authorization context.
   - Input validation with Pydantic schemas.
   - Health endpoint for monitoring/validation.
