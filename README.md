@@ -1,4 +1,3 @@
-# cs6301_project
 # Secure Multi-Database Cloud Processing Project
 
 This project implements a small cloud-style data processing environment that integrates two independent databases with secure access controls.
