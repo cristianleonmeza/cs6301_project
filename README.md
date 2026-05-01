@@ -54,11 +54,8 @@ curl http://127.0.0.1:8000/products -H "Authorization: Bearer <TOKEN>"
 pytest -q
 ```
 
-## Notes for cloud deployment
+## Cloud deployment
 
-For a production cloud deployment, add:
-
-- TLS termination (HTTPS via load balancer or reverse proxy).
-- Secret management for JWT key and DB credentials (not hardcoded).
-- Managed database services and network ACLs.
-- Centralized logging/monitoring and WAF/rate limiting.
+- App Runner as a PaaS (Authentication)
+- Secret management for JWT key and DB credentials (Authorization)
+- Cloudwatch for monitoring
