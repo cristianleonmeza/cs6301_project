@@ -53,8 +53,58 @@ curl http://127.0.0.1:8000/products -H "Authorization: Bearer <TOKEN>"
 pytest -q
 ```
 
-## Cloud deployment
+## Cloud Deployment
 
-- App Runner as a PaaS (Authentication)
+- App Runner as a PaaS (IAM role - Authentication)
 - Secret management for JWT key and DB credentials (Authorization)
 - Cloudwatch for monitoring
+
+## Validation Commands
+
+1) Health check
+```powershell
+Invoke-RestMethod -Method GET `
+  -Uri "https://trzpw2gjpr.us-east-1.awsapprunner.com/health"
+```
+2) Login and capture token
+```powershell
+$login = Invoke-RestMethod -Method POST `
+  -Uri "https://trzpw2gjpr.us-east-1.awsapprunner.com/auth/login" `
+  -ContentType "application/json" `
+  -Body '{"username":"analyst","password":"analyst123"}'
+$token = $login.access_token
+$token.Substring(0,30)
+```
+3) Protected read: products
+```powershell
+Invoke-RestMethod -Method GET `
+  -Uri "https://trzpw2gjpr.us-east-1.awsapprunner.com/products" `
+  -Headers @{ Authorization = "Bearer $token" }
+```
+4) Protected write: create order
+```powershell
+Invoke-RestMethod -Method POST `
+  -Uri "https://trzpw2gjpr.us-east-1.awsapprunner.com/orders" `
+  -Headers @{ Authorization = "Bearer $token" } `
+  -ContentType "application/json" `
+  -Body '{"product_id":1,"quantity":2}'
+```
+5) Cross-data report
+```powershell
+Invoke-RestMethod -Method GET `
+  -Uri "https://trzpw2gjpr.us-east-1.awsapprunner.com/reports/spend" `
+  -Headers @{ Authorization = "Bearer $token" }
+```
+6) Negative checks (security proof)
+- Missing token
+```powershell
+Invoke-RestMethod -Method GET `
+  -Uri "https://trzpw2gjpr.us-east-1.awsapprunner.com/products"
+```
+- Bad credentials
+```powershell
+Invoke-RestMethod -Method POST `
+  -Uri "https://trzpw2gjpr.us-east-1.awsapprunner.com/auth/login" `
+  -ContentType "application/json" `
+  -Body '{"username":"analyst","password":"wrong"}'
+```
